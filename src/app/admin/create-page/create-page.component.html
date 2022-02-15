@@ -1,11 +1,11 @@
-<form>
+<form [formGroup]="form" (ngSubmit)="submit()">
   <h1>Создание нового поста</h1>
 
   <div
     class="form-control"
     [ngClass]="{invalid: form.get('title')?.touched && form.get('title')?.invalid}"
   >
-    <label for="title">Название поста</label>
+    <label for="title">Название поста:</label>
     <input
       type="text"
       id="title"
@@ -17,19 +17,20 @@
       >
       <small
         *ngIf="form.get('title')?.errors?.required"
-      >Поле не может быть пустым</small>
+      >Введите название поста</small>
     </div>
   </div>
 
   <div class="form-control">
-    <label>Контент поста</label>
+    <label>Контент поста:</label>
+    <quill-editor formControlName="text"></quill-editor>
   </div>
 
   <div
     class="form-control"
     [ngClass]="{invalid: form.get('author')?.touched && form.get('author')?.invalid}"
   >
-    <label for="author">Автор поста</label>
+    <label for="author">Автор поста:</label>
     <input
       type="text"
       id="author"
@@ -41,16 +42,15 @@
       >
       <small
         *ngIf="form.get('author')?.errors?.required"
-      >Поле не может быть пустым</small>
+      >Введите автора поста</small>
     </div>
   </div>
 
   <button
   type="submit"
   class="btn btn-block btn-dark"
-  [disabled]="form.valid"
+  [disabled]="form.invalid"
   >
-
     Создать пост
   </button>
 

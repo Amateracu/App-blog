@@ -4,7 +4,7 @@ import { catchError, Observable, Subject, tap, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IAuthResponse, IUser } from "../form.interface";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 
 export class AuthService {
 
@@ -22,18 +22,19 @@ export class AuthService {
     return currentDate > expDate
   }
 
-  login(user: IUser): Observable<any> {
+  login(user: IUser): Observable<IAuthResponse> {
     user.returnSecureToken = true
-    return this.http.post<any>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.apiKey}`, user)
+    return this.http.post<IAuthResponse>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.apiKey}`, user)
     .pipe(
-      tap(this.setToken),
+      tap((data: IAuthResponse) => {
+        this.setToken(data.idToken, +data.expiresIn)
+      }),
       catchError(this.handleErr.bind<any>(this))
-
     )
   }
 
   logout() {
-    this.setToken(null)
+    this.setToken('', 0)
   }
 
   isAuthenticated(): boolean {
@@ -57,10 +58,10 @@ export class AuthService {
     return throwError(error)
   }
 
-  private setToken(response: IAuthResponse | null) {
-    if (response) {
-      const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000)
-      localStorage.setItem('fb-token', response.idToken)
+  private setToken(idToken: string, expiresIn: number) {
+    if (idToken) {
+      const expDate = new Date(new Date().getTime() + +expiresIn * 1000)
+      localStorage.setItem('fb-token', idToken)
       localStorage.setItem('fb-token-exp', expDate.toString())
     } else {
       localStorage.clear
