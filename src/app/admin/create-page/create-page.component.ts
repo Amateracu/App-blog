@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IPost } from '../shared/form.interface';
+import { IPost } from '../shared/interfaces/form.interface';
 import { PostsService } from '../shared/services/posts.service';
 
 @Component({
@@ -27,17 +27,17 @@ export class CreatePageComponent implements OnInit {
 
   public submit() {
     if(this.form.invalid) {
-      return
+      return;
     }
+
     const post: IPost = {
-      title: this.form.value.title,
-      text: this.form.value.text,
-      author: this.form.value.author,
+      ...this.form.value,
+      id: '',
       date: new Date,
     }
 
     this.postService.create(post).subscribe(() => {
-      this.form.reset()
+      this.form.reset();
     })
   }
 

@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, Observable, Subject, tap, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
-import { IAuthResponse, IUser } from "../form.interface";
+import { IAuthResponse, IUser } from "../interfaces/form.interface";
 
 @Injectable({providedIn: 'root'})
 

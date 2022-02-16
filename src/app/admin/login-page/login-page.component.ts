@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError } from 'rxjs';
-import { IUser } from '../shared/form.interface';
+import { IUser } from '../shared/interfaces/form.interface';
 import { AuthService } from '../shared/services/auth.service';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IPost } from '../shared/form.interface';
+import { IPost } from '../shared/interfaces/form.interface';
 import { PostsService } from '../shared/services/posts.service';
 
 @Component({
@@ -10,8 +10,11 @@ import { PostsService } from '../shared/services/posts.service';
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
 
-  public posts!: IPost[];
+  public posts: IPost[] = []
   public pSub!: Subscription;
+  public dSub!: Subscription;
+  public search = ''
+
 
   constructor(private postService: PostsService) { }
 
@@ -21,11 +24,21 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     })
   }
 
+  remove(id: string) {
+    this.dSub = this.postService.remove(id).subscribe(() => {
+      this.posts = this.posts.filter(post => post.id != id)
+    })
+  }
+
   ngOnDestroy(): void {
     if(this.pSub) {
       this.pSub.unsubscribe()
     }
+    if(this.dSub) {
+      this.dSub.unsubscribe()
+    }
   }
+
 
 
 }

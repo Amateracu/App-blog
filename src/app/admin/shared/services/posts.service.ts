@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
-import { ICreateResponse, IPost } from "../form.interface";
+import { ICreateResponse, IPost } from "../interfaces/form.interface";
 
 @Injectable({providedIn: 'root'})
 
@@ -30,5 +30,23 @@ export class PostsService {
             id: key,
           }));
       }));
+  }
+
+  getById(id: string): Observable<IPost> {
+    return this.http.get<IPost>(`${environment.fbDbUrl}/posts/${id}.json`)
+      .pipe(map((post: IPost) => {
+        return {
+          ...post,
+          id
+        }
+      }))
+  }
+
+  remove(id: string): Observable<void> {
+    return this.http.delete<void>(`${environment.fbDbUrl}/posts/${id}.json`)
+  }
+
+  update(post: IPost): Observable<IPost> {
+    return this.http.patch<IPost>(`${environment.fbDbUrl}/posts/${post.id}.json`, post)
   }
 }
